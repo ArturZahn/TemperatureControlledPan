@@ -1,15 +1,19 @@
 #include <Arduino.h>
 
-#include "temperatureControl.h"
+#include "globalInstances.h"
+#include "wait.h"
+#include "heatup.h"
 
-temperatureControl tempCtrl(TEMP_PROBE_PIN, RELAY_PIN, true);
+heatup heatup1(30);
 
 void setup() {
     Serial.begin(115200);
-    tempCtrl.setMaxTemperatureDifference(2.5);
-    tempCtrl.start(20);
+
+    tempCtrl.setMaxTemperatureDifference(MAX_TEMPERATURE_DIFFERENCE);
+    tempCtrl.start();
 }
 
 void loop() {
     tempCtrl.handle();
+
 }
