@@ -1,5 +1,14 @@
 #include "temperatureControl.h"
 
+#ifdef simulateTemperature
+float devSimulatedTemperature = 24;
+timedLoop devTemperatureLoop(100);
+#endif
+
+#ifdef tempPrintPeriod
+timedLoop devPrintTemp(tempPrintPeriod);
+#endif
+
 temperatureControl::temperatureControl(uint tempPin, uint _relayPin, bool _invertedRalay)
   : oneWire(tempPin),
     tempProbe(&oneWire),
@@ -42,13 +51,11 @@ void temperatureControl::startHeating()
 {
     this->isHeating = true;
     digitalWrite(this->relayPin, !this->invertedRalay);
-    Serial.println("ON");
 }
 void temperatureControl::stopHeating()
 {
     this->isHeating = false;
     digitalWrite(this->relayPin, this->invertedRalay);
-    Serial.println("OFF");
 }
 
 void temperatureControl::setMaxTemperatureDifference(float temp)
@@ -62,8 +69,12 @@ void temperatureControl::setTemperatureTarget(float temp)
 }
 float temperatureControl::getCurrentTemperature()
 {
+    #ifndef simulateTemperature
     tempProbe.requestTemperatures(); 
     return tempProbe.getTempCByIndex(0);
+    #else
+    return devSimulatedTemperature;
+    #endif
 }
 
 bool temperatureControl::checkIfReachedTarget()
@@ -74,6 +85,25 @@ bool temperatureControl::checkIfReachedTarget()
 
 void temperatureControl::handle()
 {
+    
+    #ifdef simulateTemperature
+    if(devTemperatureLoop.check())
+    {
+        if(this->isHeating) devSimulatedTemperature += 0.1;
+        else devSimulatedTemperature -= 0.1;
+    }
+    #endif
+
+    
+    #ifdef tempPrintPeriod
+    if(devPrintTemp.check())
+    {
+        Serial.print("Temp: ");
+        Serial.print(this->getCurrentTemperature());
+        Serial.println("°C");
+    }
+    #endif
+
     if(loop.check())
     {
         if(this->controlState)

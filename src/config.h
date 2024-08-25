@@ -1,3 +1,8 @@
+/*------------------------ DEV OPTIONS ------------------------*/
+
+#define simulateTemperature
+#define tempPrintPeriod 500
+
 /*------------------------ HARDWARE PINOUT ------------------------*/
 
 #define RELAY_PIN 1
@@ -7,3 +12,4 @@
 /*------------------------ TEMPERATURE CONTROL ------------------------*/
 
 #define tempCheckPeriod 100
+#define MAX_TEMPERATURE_DIFFERENCE 5
