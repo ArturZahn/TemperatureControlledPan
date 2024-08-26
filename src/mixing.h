@@ -2,6 +2,7 @@
 #define MIXING_H
 
 #include "task.h"
+#include "globalInstances.h"
 
 class mixing : public task {
 private:

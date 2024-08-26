@@ -6,7 +6,7 @@ mixing::mixing(bool mixingState)
 }
 void mixing::handleStart()
 {
-    
+    actuatorsCtrl.setMixingState(this->mixingState);
     this->setAsStoped();
 }
 void mixing::handleForceStop()

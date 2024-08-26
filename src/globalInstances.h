@@ -3,7 +3,9 @@
 
 #include "config.h"
 #include "temperatureControl.h"
+#include "actuatorsControl.h"
 
 extern temperatureControl tempCtrl;
+extern actuatorsControl actuatorsCtrl;
 
 #endif
