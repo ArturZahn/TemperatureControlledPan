@@ -3,6 +3,7 @@
 task::task()
 {
     this->isRunning = false;
+    this->finished = false;
 }
 
 void task::start(){
@@ -22,9 +23,15 @@ void task::forceStop(){
 void task::setAsStoped()
 {
     this->isRunning = false;
+    this->finished = true;
 }
 
 bool task::checkIfIsRunning()
 {
     return this->isRunning;
+}
+
+bool task::checkIfFinished()
+{
+    return this->finished;
 }

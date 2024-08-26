@@ -85,22 +85,20 @@ bool temperatureControl::checkIfReachedTarget()
 
 void temperatureControl::handle()
 {
-    
-    #ifdef simulateTemperature
-    if(devTemperatureLoop.check())
-    {
-        if(this->isHeating) devSimulatedTemperature += 0.1;
-        else devSimulatedTemperature -= 0.1;
-    }
-    #endif
-
-    
     #ifdef tempPrintPeriod
     if(devPrintTemp.check())
     {
         Serial.print("Temp: ");
         Serial.print(this->getCurrentTemperature());
         Serial.println("°C");
+    }
+    #endif
+    
+    #ifdef simulateTemperature
+    if(devTemperatureLoop.check())
+    {
+        if(this->isHeating) devSimulatedTemperature += 0.1;
+        else devSimulatedTemperature -= 0.1;
     }
     #endif
 

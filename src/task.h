@@ -6,6 +6,7 @@
 class task {
 protected:
     bool isRunning;
+    bool finished;
     void setAsStoped();
 public:
     task();
@@ -13,6 +14,7 @@ public:
     void start();
     void forceStop();
     bool checkIfIsRunning();
+    bool checkIfFinished();
 
     virtual void handleStart() = 0;
     virtual void handleForceStop() = 0;
