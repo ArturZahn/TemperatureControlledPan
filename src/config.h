@@ -3,6 +3,8 @@
 #define simulateTemperature
 // #define tempPrintPeriod 500
 
+#define BAUDRATE 115200
+
 /*------------------------ HARDWARE PINOUT ------------------------*/
 
 #define RELAY_PIN 1

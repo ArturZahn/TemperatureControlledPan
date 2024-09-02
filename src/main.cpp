@@ -1,31 +1,21 @@
 #include <Arduino.h>
-#include <vector>
-#include <memory>
 
+// #include "wifiManager.h"
 #include "globalInstances.h"
-#include "taskList.h"
-#include "allTasks.h"
 
-
-taskList myList;
-
+// wifiManager wifi;
 void setup() {
     Serial.begin(115200);
 
-    tempCtrl.setMaxTemperatureDifference(MAX_TEMPERATURE_DIFFERENCE);
-    tempCtrl.start();
+    espcli.begin();
 
-    myList.tasks.push_back(make_unique<wait>(2*1000));
-    myList.tasks.push_back(make_unique<mixing>(true));
-    myList.tasks.push_back(make_unique<wait>(4*1000));
-    myList.tasks.push_back(make_unique<mixing>(false));
-    myList.tasks.push_back(make_unique<heatup>(10));
-
-    myList.runAll();
+    // wifi.begin();
+    // wifi.listSavedNetworks();
+    // wifi.enableAutoConnection();
+    // wifi.saveList();
+    // wifi.connect();
 }
 
-
 void loop() {
-    tempCtrl.handle();
-    myList.handle();
+    espcli.handle();
 }
