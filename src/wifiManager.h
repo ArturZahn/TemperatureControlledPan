@@ -29,21 +29,22 @@ public:
 
     void handle();
 
-    // void connect();
-    // void connect(int networkNumber);
-    // void connect(String ssid);
-    // void connect(String ssid, String passwd);
+    void autoConnect();
+    bool connect(int networkIndex);
+    bool connect(String ssid);
+    void addAndConnect(String ssid, String passwd);
+    void disconnect();
 
     void addNetworkToList(String ssid, String passwd);
-    void removeNetwork(String ssid);
-    void removeNetwork(int id);
+    bool removeNetwork(String ssid);
+    bool removeNetwork(int id);
 
     void loadList();
     void saveList();
 
     void listSavedNetworks();
     int getNumberOfSavedNetworks();
-    String getSavedNetwork(int networkNumber);
+    String getSavedNetwork(int networkIndex);
 };
 
 

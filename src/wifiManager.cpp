@@ -32,11 +32,11 @@ void wifiManager::handle()
 
 void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    Serial.print("event trigered: ");
+    // Serial.print("event trigered: ");
     switch (event)
     {
     case SYSTEM_EVENT_SCAN_DONE:
-        Serial.println("SYSTEM_EVENT_SCAN_DONE");
+        // Serial.println("SYSTEM_EVENT_SCAN_DONE");
         if(this->waitingScanningToAutoConnect)
         {
             this->_chooseNetworkFromScanAndConnect();
@@ -45,7 +45,7 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         WiFi.scanDelete();
         break;    
     case SYSTEM_EVENT_STA_CONNECTED:
-        Serial.println("SYSTEM_EVENT_STA_CONNECTED");
+        // Serial.println("SYSTEM_EVENT_STA_CONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Connected successfully");
@@ -54,7 +54,7 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 
         break;    
     case SYSTEM_EVENT_STA_DISCONNECTED:
-        Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
+        // Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Could not connect to selected network");
@@ -62,7 +62,8 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         }
         break;
     default:
-        Serial.println(getEventName(event));
+        // Serial.println(getEventName(event));
+        break;
     }
 }
 
@@ -188,18 +189,20 @@ int wifiManager::getNumberOfSavedNetworks()
 {
     return this->wifiList.size();
 }
-String wifiManager::getSavedNetwork(int networkNumber)
+String wifiManager::getSavedNetwork(int networkIndex)
 {
-    return this->wifiList[networkNumber];
+    return this->wifiList[networkIndex];
 }
 void wifiManager::listSavedNetworks()
 {
+    Serial.println("Saved WIFIs:");
     for (int i = 0; i < this->wifiList.size(); i++)
     {
-        // Serial.print("\n");
+        Serial.print("    \"");
         Serial.print(this->wifiList[i]);
-        Serial.print(" ");
-        Serial.println(this->passwdList[i]);
+        Serial.print("\" \"");
+        Serial.print(this->passwdList[i]);
+        Serial.println("\"");
     }
 }
 void wifiManager::addNetworkToList(String ssid, String passwd)
@@ -215,22 +218,69 @@ void wifiManager::addNetworkToList(String ssid, String passwd)
 
     this->wifiList.push_back(ssid);
     this->passwdList.push_back(passwd);
+
+    this->saveList();
 }
-void wifiManager::removeNetwork(String ssid)
+bool wifiManager::removeNetwork(String ssid)
 {
     auto it = std::find(this->wifiList.begin(), this->wifiList.end(), ssid);
     
-    if(it == this->wifiList.end()) return;
+    if(it == this->wifiList.end()) return false;
 
     int indexToRemove = std::distance(wifiList.begin(), it);
 
     this->wifiList.erase(it);
     this->passwdList.erase(this->passwdList.begin() + indexToRemove);
+
+    return true;
 }
-void wifiManager::removeNetwork(int id)
+bool wifiManager::removeNetwork(int id)
 {
-    if(id >= this->wifiList.size())
+    if(id >= this->wifiList.size()) return false;
     
     this->wifiList.erase(this->wifiList.begin() + id);
     this->passwdList.erase(this->passwdList.begin() + id);
+
+    return true;
+}
+
+
+/*----------------------------- OTHER PUBLIC FUNCTIONS -----------------------------*/
+
+void wifiManager::autoConnect()
+{
+    this->_autoConnect();
+}
+
+void wifiManager::addAndConnect(String ssid, String passwd)
+{
+    this->addNetworkToList(ssid, passwd);
+    this->_connect(ssid, passwd);
+}
+
+bool wifiManager::connect(String ssid)
+{
+    for (int i = 0; i < this->wifiList.size(); i++)
+    {
+        if(this->wifiList[i] == ssid)
+        {
+            this->_connect(ssid, this->passwdList[i]);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool wifiManager::connect(int networkIndex)
+{
+    if(networkIndex >= this->wifiList.size()) return false;
+
+    this->_connect(this->wifiList[networkIndex], this->passwdList[networkIndex]);
+    return true;
+}
+
+void wifiManager::disconnect()
+{
+    WiFi.disconnect();
 }

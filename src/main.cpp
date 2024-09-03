@@ -9,6 +9,8 @@ void setup() {
 
     espcli.begin();
 
+    wifiMan.begin(true);
+
     // wifi.begin();
     // wifi.listSavedNetworks();
     // wifi.enableAutoConnection();
@@ -18,4 +20,5 @@ void setup() {
 
 void loop() {
     espcli.handle();
+    wifiMan.handle();
 }

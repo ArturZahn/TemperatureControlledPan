@@ -5,8 +5,6 @@
 #include <SimpleCLI.h>
 #include <Preferences.h>
 
-// #include "globalInstances.h"
-
 
 class cliHandler
 {
