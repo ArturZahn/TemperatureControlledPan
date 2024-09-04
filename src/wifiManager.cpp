@@ -1,8 +1,10 @@
 #include "wifiManager.h"
 #include "getEventType.h"
 
-wifiManager::wifiManager(int n)
+wifiManager::wifiManager(int n, unsigned long autoConnectionCheckPeriod):
+wifiAutoConnectionLoop(autoConnectionCheckPeriod)
 {
+
 }
 
 void wifiManager::begin(bool enableAutoConnection)
@@ -27,7 +29,13 @@ void wifiManager::begin(bool enableAutoConnection)
 
 void wifiManager::handle()
 {
-    
+    if(this->autoConnection && this->wifiAutoConnectionLoop.check())
+    {
+        if(WiFi.status() != WL_CONNECTED)
+        {
+            this->_autoConnect();
+        }
+    }
 }
 
 void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
@@ -231,6 +239,7 @@ bool wifiManager::removeNetwork(String ssid)
 
     this->wifiList.erase(it);
     this->passwdList.erase(this->passwdList.begin() + indexToRemove);
+    this->saveList();
 
     return true;
 }
@@ -240,6 +249,7 @@ bool wifiManager::removeNetwork(int id)
     
     this->wifiList.erase(this->wifiList.begin() + id);
     this->passwdList.erase(this->passwdList.begin() + id);
+    this->saveList();
 
     return true;
 }

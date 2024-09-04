@@ -24,6 +24,7 @@ public:
 
 void errorCallback(cmd_error* e);
 void wifiCallback(cmd* c);
+void restartCallback(cmd* c);
 
 
 #endif

@@ -6,6 +6,8 @@
 #include <vector>
 #include <Preferences.h>
 
+#include "timedLoop.h"
+
 class wifiManager
 {
 private:
@@ -18,10 +20,13 @@ private:
     bool autoConnection;
     bool waitingScanningToAutoConnect;
     bool waitingForConnection;
+
+    timedLoop wifiAutoConnectionLoop;
+
 public:
     std::vector<String> wifiList;
     std::vector<String> passwdList;
-    wifiManager(int n);
+    wifiManager(int n, unsigned long autoConnectionCheckPeriod = 5000);
     void begin(bool autoConnection = false);
 
     void enableAutoConnection();

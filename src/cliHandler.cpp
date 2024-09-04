@@ -29,6 +29,9 @@ void cliHandler::begin()
     wifiCmd.addFlagArgument("list");
     wifiCmd.addPositionalArgument("arg1", "");
     wifiCmd.addPositionalArgument("arg2", "");
+
+    Command restartCmd;
+    restartCmd = cli.addCommand("restart", restartCallback);
 }
 
 void cliHandler::handle()
@@ -81,15 +84,10 @@ void wifiCallback(cmd* c) {
         {
             if(arg1.getValue() != "")
             {
-                if(wifiMan.connect(arg1.getValue())) 
-                    Serial.println("this wifi exists");
-                else
-                    Serial.println("this wifi doesnt exist");
+                if(!wifiMan.connect(arg1.getValue()))
+                    Serial.println("This wifi doesnt exist");
             }
-            else
-            {
-                wifiMan.autoConnect();
-            }
+            else wifiMan.autoConnect();
         }
     }
     else if(dis.isSet())
@@ -118,4 +116,9 @@ void wifiCallback(cmd* c) {
         Serial.println("Usage:");
         Serial.println(cmd.toString());
     }
+}
+
+void restartCallback(cmd* c)
+{
+    ESP.restart();
 }
