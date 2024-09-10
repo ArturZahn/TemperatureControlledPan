@@ -27,6 +27,7 @@ void cliHandler::begin()
     wifiCmd.addFlagArgument("add");
     wifiCmd.addFlagArgument("rem");
     wifiCmd.addFlagArgument("list");
+    wifiCmd.addFlagArgument("status");
     wifiCmd.addPositionalArgument("arg1", "");
     wifiCmd.addPositionalArgument("arg2", "");
 
@@ -73,6 +74,7 @@ void wifiCallback(cmd* c) {
     Argument add = cmd.getArgument("add");
     Argument rem = cmd.getArgument("rem");
     Argument list = cmd.getArgument("list");
+    Argument status = cmd.getArgument("status");
 
     if(con.isSet())
     {
@@ -110,6 +112,20 @@ void wifiCallback(cmd* c) {
     else if(list.isSet())
     {
         wifiMan.listSavedNetworks();
+    }
+    else if(status.isSet())
+    {
+        if (WiFi.status() == WL_CONNECTED) {
+            Serial.println("Connected to network: " + WiFi.SSID());
+
+            Serial.print("IP Address: ");
+            Serial.println(WiFi.localIP());
+
+            Serial.print("Signal strength (RSSI): ");
+            Serial.println(WiFi.RSSI());
+        } else {
+            Serial.println("WiFi is not connected");
+        }
     }
     else
     {

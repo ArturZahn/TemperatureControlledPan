@@ -31,20 +31,23 @@ void wifiManager::handle()
 {
     if(this->autoConnection && this->wifiAutoConnectionLoop.check())
     {
-        if(WiFi.status() != WL_CONNECTED)
+        if(!waitingScanningToAutoConnect && !waitingForConnection)
         {
-            this->_autoConnect();
+            if(WiFi.status() != WL_CONNECTED)
+            {
+                this->_autoConnect();
+            }
         }
     }
 }
 
 void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    // Serial.print("event trigered: ");
+    Serial.print("event trigered: ");
     switch (event)
     {
     case SYSTEM_EVENT_SCAN_DONE:
-        // Serial.println("SYSTEM_EVENT_SCAN_DONE");
+        Serial.println("SYSTEM_EVENT_SCAN_DONE");
         if(this->waitingScanningToAutoConnect)
         {
             this->_chooseNetworkFromScanAndConnect();
@@ -53,7 +56,7 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         WiFi.scanDelete();
         break;    
     case SYSTEM_EVENT_STA_CONNECTED:
-        // Serial.println("SYSTEM_EVENT_STA_CONNECTED");
+        Serial.println("SYSTEM_EVENT_STA_CONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Connected successfully");
@@ -62,7 +65,7 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 
         break;    
     case SYSTEM_EVENT_STA_DISCONNECTED:
-        // Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
+        Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Could not connect to selected network");
@@ -70,7 +73,7 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         }
         break;
     default:
-        // Serial.println(getEventName(event));
+        Serial.println(getEventName(event));
         break;
     }
 }
@@ -132,6 +135,12 @@ void wifiManager::_chooseNetworkFromScanAndConnect()
             }
         }
         Serial.println(WiFi.SSID(i));
+
+        String str = WiFi.SSID(i);
+        for (int i = 0; i < str.length(); i++)
+        {
+            Serial.println(str[i]);
+        }
     }
 
     if(bestWifiIndexInList != -1)
