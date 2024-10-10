@@ -19,6 +19,7 @@ public:
     cliHandler(HardwareSerial& serial, int baudrate);
     void begin();
     void handle();
+    void parseCliCommand(String& cmd);
 };
 
 

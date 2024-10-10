@@ -43,11 +43,12 @@ void wifiManager::handle()
 
 void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    Serial.print("event trigered: ");
+    Serial.println("event trigered: ");
+    Serial.println(getEventName(event));
+
     switch (event)
     {
     case SYSTEM_EVENT_SCAN_DONE:
-        Serial.println("SYSTEM_EVENT_SCAN_DONE");
         if(this->waitingScanningToAutoConnect)
         {
             this->_chooseNetworkFromScanAndConnect();
@@ -56,7 +57,6 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         WiFi.scanDelete();
         break;    
     case SYSTEM_EVENT_STA_CONNECTED:
-        Serial.println("SYSTEM_EVENT_STA_CONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Connected successfully");
@@ -65,7 +65,6 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 
         break;    
     case SYSTEM_EVENT_STA_DISCONNECTED:
-        Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
         if(this->waitingForConnection)
         {
             Serial.println("Could not connect to selected network");
@@ -73,7 +72,6 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         }
         break;
     default:
-        Serial.println(getEventName(event));
         break;
     }
 }
@@ -106,6 +104,15 @@ void wifiManager::_connect(String ssid, String passwd)
     
     this->waitingForConnection = true;
     WiFi.begin(ssid, passwd);
+
+    this->startMDNS();
+}
+
+void wifiManager::startMDNS()
+{
+    if (!MDNS.begin(nameHost)) {
+        Serial.println("Erro ao configurar o mDNS");
+    }
 }
 
 void wifiManager::_chooseNetworkFromScanAndConnect()
@@ -133,13 +140,6 @@ void wifiManager::_chooseNetworkFromScanAndConnect()
                 bestWifiId = i;
                 bestWifiIndexInList = std::distance(wifiList.begin(), it);
             }
-        }
-        Serial.println(WiFi.SSID(i));
-
-        String str = WiFi.SSID(i);
-        for (int i = 0; i < str.length(); i++)
-        {
-            Serial.println(str[i]);
         }
     }
 

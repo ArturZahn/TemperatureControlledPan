@@ -18,7 +18,7 @@ void setup() {
     // wifi.enableAutoConnection();
     // wifi.saveList();
     // wifi.connect();
-    
+
     setupOTA();
 }
 

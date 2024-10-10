@@ -59,7 +59,7 @@ void TelegramBot::handleNewMessages(int numNewMessages) {
     }
     else if(activeChat == chat_id)
     {
-        // espcli.parseCliCommand(text);
+        espcli.parseCliCommand(text);
     }
     else
     {

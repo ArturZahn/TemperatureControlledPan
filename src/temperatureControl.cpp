@@ -1,5 +1,7 @@
 #include "temperatureControl.h"
 
+#define ledPin 22
+
 #ifdef simulateTemperature
 float devSimulatedTemperature = 24;
 timedLoop devTemperatureLoop(100);
@@ -18,11 +20,13 @@ temperatureControl::temperatureControl(uint tempPin, uint _relayPin, bool _inver
     this->controlState = false;
     this->reachedTargetTemp = false;
     this->isHeating = false;
+    this->maxTemperatureDifference = MAX_TEMPERATURE_DIFFERENCE;
 
     this->relayPin = _relayPin;
     this->invertedRalay = _invertedRalay;
 
     pinMode(relayPin, OUTPUT);
+    pinMode(ledPin, OUTPUT);
 }
 
 // starts and stops the temperature control
@@ -82,7 +86,7 @@ bool temperatureControl::checkIfReachedTarget()
     return this->reachedTargetTemp;
 }
 
-
+bool sttLed = false;
 void temperatureControl::handle()
 {
     #ifdef tempPrintPeriod
@@ -106,15 +110,26 @@ void temperatureControl::handle()
     {
         if(this->controlState)
         {
-            if(this->isHeating && this->getCurrentTemperature() >= this->targetTemperature)
+            float currentTemperature = this->getCurrentTemperature();
+            if (currentTemperature > 0)
+            {
+                if(this->isHeating && currentTemperature >= this->targetTemperature)
             {
                 this->stopHeating();
                 this->reachedTargetTemp = true;
             }
 
-            if(!this->isHeating && (this->getCurrentTemperature() <= (this->targetTemperature - this->maxTemperatureDifference)))
+                if(!this->isHeating && (currentTemperature <= (this->targetTemperature - this->maxTemperatureDifference)))
             {
                 this->startHeating();
+                }
+            }
+            else
+            {
+                Serial.println("Erro, temperatura é ");
+                Serial.println(currentTemperature);
+                digitalWrite(ledPin, sttLed);
+                sttLed = !sttLed;
             }
         }
     }

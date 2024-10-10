@@ -138,3 +138,9 @@ void restartCallback(cmd* c)
 {
     ESP.restart();
 }
+
+
+void cliHandler::parseCliCommand(String& cmd)
+{
+    cli.parse(cmd);
+}
