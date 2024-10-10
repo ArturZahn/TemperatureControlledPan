@@ -3,6 +3,8 @@
 // #include "wifiManager.h"
 #include "globalInstances.h"
 #include "ota.h"
+#include "print.h"
+
 // wifiManager wifi;
 void setup() {
     Serial.begin(115200);
@@ -22,6 +24,7 @@ void setup() {
     setupOTA();
 }
 
+bool waitingForConnection = true;
 void loop() {
     espcli.handle();
     wifiMan.handle();
@@ -30,6 +33,17 @@ void loop() {
 
 
     tempCtrl.handle();
+    // tempCtrl.start(50);
+
+    if(waitingForConnection)
+    {
+        if(WiFi.status() == WL_CONNECTED)
+        {
+            waitingForConnection = false;
+            myprintObj.testAll();
+        }
+    }
+
 
     #if defined(ESP32_RTOS) && defined(ESP32)
     #else // If you do not use FreeRTOS, you have to regulary call the handle method.

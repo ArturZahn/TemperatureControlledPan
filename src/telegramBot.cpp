@@ -49,7 +49,7 @@ void TelegramBot::handleNewMessages(int numNewMessages) {
     String chat_id = String(bot.messages[i].chat_id);
     String text = bot.messages[i].text;
 
-    Serial.println("Received message: " + text);
+    myprintln("Received message: " + text);
     
     // Check message content and respond
     if (text == "/start")

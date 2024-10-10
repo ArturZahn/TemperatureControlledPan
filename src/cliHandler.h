@@ -5,6 +5,7 @@
 #include <SimpleCLI.h>
 #include <Preferences.h>
 
+#include "print.h"
 
 class cliHandler
 {

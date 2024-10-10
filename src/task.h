@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#include "print.h"
+
 class task {
 protected:
     bool isRunning;

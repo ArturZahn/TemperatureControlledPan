@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "timedLoop.h"
+#include "print.h"
 
 class wifiManager
 {

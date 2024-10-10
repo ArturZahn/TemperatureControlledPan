@@ -3,7 +3,7 @@
 
 #include <Preferences.h>
 
-
+#include "print.h"
 #include "telegramBot.h"
 #include "config.h"
 #include "temperatureControl.h"

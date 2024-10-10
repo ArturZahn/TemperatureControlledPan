@@ -2,6 +2,7 @@
 #define ACTUATORSCONTROL_H
 
 #include <Arduino.h>
+#include "print.h"
 
 class actuatorsControl
 {

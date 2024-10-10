@@ -55,11 +55,13 @@ void temperatureControl::startHeating()
 {
     this->isHeating = true;
     digitalWrite(this->relayPin, !this->invertedRalay);
+    myprintln("startHeating");
 }
 void temperatureControl::stopHeating()
 {
     this->isHeating = false;
     digitalWrite(this->relayPin, this->invertedRalay);
+    myprintln("stopHeating");
 }
 
 void temperatureControl::setMaxTemperatureDifference(float temp)
@@ -92,9 +94,9 @@ void temperatureControl::handle()
     #ifdef tempPrintPeriod
     if(devPrintTemp.check())
     {
-        Serial.print("Temp: ");
-        Serial.print(this->getCurrentTemperature());
-        Serial.println("°C");
+        myprint("Temp: ");
+        myprint(this->getCurrentTemperature());
+        myprintln("°C");
     }
     #endif
     
@@ -126,8 +128,8 @@ void temperatureControl::handle()
             }
             else
             {
-                Serial.println("Erro, temperatura é ");
-                Serial.println(currentTemperature);
+                myprintln("Erro, temperatura é ");
+                myprintln(currentTemperature);
                 digitalWrite(ledPin, sttLed);
                 sttLed = !sttLed;
             }

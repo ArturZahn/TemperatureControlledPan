@@ -53,13 +53,13 @@ void cliHandler::handle()
 void errorCallback(cmd_error* e) {
     CommandError cmdError(e); // Create wrapper object
 
-    Serial.print("ERROR: ");
-    Serial.println(cmdError.toString());
+    myprint("ERROR: ");
+    myprintln(cmdError.toString());
 
     if (cmdError.hasCommand()) {
-        Serial.print("Did you mean \"");
-        Serial.print(cmdError.getCommand().toString());
-        Serial.println("\"?");
+        myprint("Did you mean \"");
+        myprint(cmdError.getCommand().toString());
+        myprintln("\"?");
     }
 }
 
@@ -87,7 +87,7 @@ void wifiCallback(cmd* c) {
             if(arg1.getValue() != "")
             {
                 if(!wifiMan.connect(arg1.getValue()))
-                    Serial.println("This wifi doesnt exist");
+                    myprintln("This wifi doesnt exist");
             }
             else wifiMan.autoConnect();
         }
@@ -99,8 +99,8 @@ void wifiCallback(cmd* c) {
     else if(rem.isSet())
     {
         if(wifiMan.removeNetwork(arg1.getValue())) 
-            Serial.println("Removed");
-        else Serial.println("This network isnt known");
+            myprintln("Removed");
+        else myprintln("This network isnt known");
     }
     else if(add.isSet())
     {
@@ -116,21 +116,21 @@ void wifiCallback(cmd* c) {
     else if(status.isSet())
     {
         if (WiFi.status() == WL_CONNECTED) {
-            Serial.println("Connected to network: " + WiFi.SSID());
+            myprintln("Connected to network: " + WiFi.SSID());
 
-            Serial.print("IP Address: ");
-            Serial.println(WiFi.localIP());
+            myprint("IP Address: ");
+            myprintln(WiFi.localIP());
 
-            Serial.print("Signal strength (RSSI): ");
-            Serial.println(WiFi.RSSI());
+            myprint("Signal strength (RSSI): ");
+            myprintln(WiFi.RSSI());
         } else {
-            Serial.println("WiFi is not connected");
+            myprintln("WiFi is not connected");
         }
     }
     else
     {
-        Serial.println("Usage:");
-        Serial.println(cmd.toString());
+        myprintln("Usage:");
+        myprintln(cmd.toString());
     }
 }
 
