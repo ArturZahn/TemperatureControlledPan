@@ -34,7 +34,7 @@ void taskList::startNextTask()
     if(this->currentTask >= this->tasks.size())
     {
         // ended all tasks
-        myprintln("Acabou");
+        Serial.println("Acabou");
         this->currentTask = -1;
         this->isRunning = false;
         this->finished = true;
@@ -42,9 +42,9 @@ void taskList::startNextTask()
     else
     {
         this->tasks[this->currentTask]->start();
-        myprintln("Tarefa ");
-        myprintln(this->currentTask);
-        myprintln(" iniciada");
+        Serial.print("Tarefa ");
+        Serial.print(this->currentTask);
+        Serial.println(" iniciada");
     }
 }
 

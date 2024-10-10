@@ -3,13 +3,10 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
-#include <ESPmDNS.h>
 #include <vector>
 #include <Preferences.h>
 
-#include "config.h"
 #include "timedLoop.h"
-#include "print.h"
 
 class wifiManager
 {
@@ -49,8 +46,6 @@ public:
 
     void loadList();
     void saveList();
-
-    void startMDNS();
 
     void listSavedNetworks();
     int getNumberOfSavedNetworks();

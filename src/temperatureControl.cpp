@@ -1,7 +1,5 @@
 #include "temperatureControl.h"
 
-#define ledPin 22
-
 #ifdef simulateTemperature
 float devSimulatedTemperature = 24;
 timedLoop devTemperatureLoop(100);
@@ -20,13 +18,11 @@ temperatureControl::temperatureControl(uint tempPin, uint _relayPin, bool _inver
     this->controlState = false;
     this->reachedTargetTemp = false;
     this->isHeating = false;
-    this->maxTemperatureDifference = MAX_TEMPERATURE_DIFFERENCE;
 
     this->relayPin = _relayPin;
     this->invertedRalay = _invertedRalay;
 
     pinMode(relayPin, OUTPUT);
-    pinMode(ledPin, OUTPUT);
 }
 
 // starts and stops the temperature control
@@ -55,13 +51,11 @@ void temperatureControl::startHeating()
 {
     this->isHeating = true;
     digitalWrite(this->relayPin, !this->invertedRalay);
-    myprintln("startHeating");
 }
 void temperatureControl::stopHeating()
 {
     this->isHeating = false;
     digitalWrite(this->relayPin, this->invertedRalay);
-    myprintln("stopHeating");
 }
 
 void temperatureControl::setMaxTemperatureDifference(float temp)
@@ -88,15 +82,15 @@ bool temperatureControl::checkIfReachedTarget()
     return this->reachedTargetTemp;
 }
 
-bool sttLed = false;
+
 void temperatureControl::handle()
 {
     #ifdef tempPrintPeriod
     if(devPrintTemp.check())
     {
-        myprintln("Temp: ");
-        myprintln(this->getCurrentTemperature());
-        myprintln("°C");
+        Serial.print("Temp: ");
+        Serial.print(this->getCurrentTemperature());
+        Serial.println("°C");
     }
     #endif
     
@@ -112,26 +106,15 @@ void temperatureControl::handle()
     {
         if(this->controlState)
         {
-            float currentTemperature = this->getCurrentTemperature();
-            if (currentTemperature > 0)
+            if(this->isHeating && this->getCurrentTemperature() >= this->targetTemperature)
             {
-                if(this->isHeating && currentTemperature >= this->targetTemperature)
-                {
-                    this->stopHeating();
-                    this->reachedTargetTemp = true;
-                }
-
-                if(!this->isHeating && (currentTemperature <= (this->targetTemperature - this->maxTemperatureDifference)))
-                {
-                    this->startHeating();
-                }
+                this->stopHeating();
+                this->reachedTargetTemp = true;
             }
-            else
+
+            if(!this->isHeating && (this->getCurrentTemperature() <= (this->targetTemperature - this->maxTemperatureDifference)))
             {
-                myprintln("Erro, temperatura é ");
-                myprintln(currentTemperature);
-                digitalWrite(ledPin, sttLed);
-                sttLed = !sttLed;
+                this->startHeating();
             }
         }
     }

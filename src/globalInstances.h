@@ -3,16 +3,12 @@
 
 #include <Preferences.h>
 
-#include "print.h"
-
-#include "telegramBot.h"
 #include "config.h"
 #include "temperatureControl.h"
 #include "actuatorsControl.h"
 #include "cliHandler.h"
 #include "wifiManager.h"
 
-extern TelegramBot telegBot;
 extern temperatureControl tempCtrl;
 extern actuatorsControl actuatorsCtrl;
 extern cliHandler espcli;

@@ -9,7 +9,7 @@ wifiAutoConnectionLoop(autoConnectionCheckPeriod)
 
 void wifiManager::begin(bool enableAutoConnection)
 {
-    myprintln("begining");
+    Serial.println("begining");
     this->p.begin("wifi-config", false);
 
     this->loadList();
@@ -43,12 +43,11 @@ void wifiManager::handle()
 
 void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 {
-    myprintln("event trigered: ");
-    myprintln(getEventName(event));
-
+    Serial.print("event trigered: ");
     switch (event)
     {
     case SYSTEM_EVENT_SCAN_DONE:
+        Serial.println("SYSTEM_EVENT_SCAN_DONE");
         if(this->waitingScanningToAutoConnect)
         {
             this->_chooseNetworkFromScanAndConnect();
@@ -57,78 +56,66 @@ void wifiManager::handleWifiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
         WiFi.scanDelete();
         break;    
     case SYSTEM_EVENT_STA_CONNECTED:
+        Serial.println("SYSTEM_EVENT_STA_CONNECTED");
         if(this->waitingForConnection)
         {
-            myprintln("Connected successfully");
+            Serial.println("Connected successfully");
             this->waitingForConnection = false;
         }
-
-        myprintln("IP: ");
-        myprintln(WiFi.localIP());
 
         break;    
     case SYSTEM_EVENT_STA_DISCONNECTED:
+        Serial.println("SYSTEM_EVENT_STA_DISCONNECTED");
         if(this->waitingForConnection)
         {
-            myprintln("Could not connect to selected network");
+            Serial.println("Could not connect to selected network");
             this->waitingForConnection = false;
         }
         break;
-    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
-        myprintln("IP ev: ");
-        myprintln(WiFi.localIP());
     default:
+        Serial.println(getEventName(event));
         break;
     }
 }
 
 void wifiManager::enableAutoConnection()
 {
-    myprintln("enabling auto connect");
+    Serial.println("enabling auto connect");
     this->autoConnection = true;
     this->_autoConnect();
 }
 void wifiManager::disableAutoConnection()
 {
-    myprintln("disabling auto connect");
+    Serial.println("disabling auto connect");
     this->autoConnection = false;
 }
 
 void wifiManager::_autoConnect()
 {
-    myprintln("beginning of auto connect");
+    Serial.println("beginning of auto connect");
     this->waitingScanningToAutoConnect = true;
     
-    myprintln("getting networks...");
+    Serial.println("getting networks...");
     WiFi.scanNetworks(true);
 }
 
 void wifiManager::_connect(String ssid, String passwd)
 {
-    myprintln("connecting to ");
-    myprintln(ssid);
+    Serial.print("connecting to ");
+    Serial.println(ssid);
     
     this->waitingForConnection = true;
     WiFi.begin(ssid, passwd);
-
-    this->startMDNS();
-}
-
-void wifiManager::startMDNS()
-{
-    if (!MDNS.begin(nameHost)) {
-        myprintln("Erro ao configurar o mDNS");
-    }
 }
 
 void wifiManager::_chooseNetworkFromScanAndConnect()
 {
-    // myprintln("choosing network to connect");
+    Serial.println("choosing network to connect");
     int n = WiFi.scanComplete();
 
     if(n == -2)
     {
-        myprintln("There isn't a network scan yet");
+        Serial.println("There isn't a network scan yet");
         return;
     }
 
@@ -140,24 +127,30 @@ void wifiManager::_chooseNetworkFromScanAndConnect()
 
         if(it != this->wifiList.end())
         {
-            // myprintln(">");
+            Serial.print(">");
             if(bestWifiId == -1 || WiFi.RSSI(i) > WiFi.RSSI(bestWifiId))
             {
                 bestWifiId = i;
                 bestWifiIndexInList = std::distance(wifiList.begin(), it);
             }
         }
-        // myprintln(WiFi.SSID(i));
+        Serial.println(WiFi.SSID(i));
+
+        String str = WiFi.SSID(i);
+        for (int i = 0; i < str.length(); i++)
+        {
+            Serial.println(str[i]);
+        }
     }
 
     if(bestWifiIndexInList != -1)
     {
-        myprintln("chosen network: ");
-        myprintln(this->wifiList[bestWifiIndexInList]);
+        Serial.print("chosen network: ");
+        Serial.println(this->wifiList[bestWifiIndexInList]);
 
         this->_connect(this->wifiList[bestWifiIndexInList], this->passwdList[bestWifiIndexInList]);
     }
-    else myprintln("network not found");
+    else Serial.println("network not found");
 }
 
 /*----------------------------- WIFI LIST HANDLING -----------------------------*/
@@ -188,7 +181,7 @@ void wifiManager::loadList()
 
     if(this->wifiList.size() != this->passwdList.size())
     {
-        myprintln("Error in saved wifi");
+        Serial.println("Error in saved wifi");
         this->wifiList.clear();
         this->passwdList.clear();
     }
@@ -219,14 +212,14 @@ String wifiManager::getSavedNetwork(int networkIndex)
 }
 void wifiManager::listSavedNetworks()
 {
-    myprintln("Saved WIFIs:");
+    Serial.println("Saved WIFIs:");
     for (int i = 0; i < this->wifiList.size(); i++)
     {
-        myprintln("    \"");
-        myprintln(this->wifiList[i]);
-        myprintln("\" \"");
-        myprintln(this->passwdList[i]);
-        myprintln("\"");
+        Serial.print("    \"");
+        Serial.print(this->wifiList[i]);
+        Serial.print("\" \"");
+        Serial.print(this->passwdList[i]);
+        Serial.println("\"");
     }
 }
 void wifiManager::addNetworkToList(String ssid, String passwd)

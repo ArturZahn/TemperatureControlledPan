@@ -53,13 +53,13 @@ void cliHandler::handle()
 void errorCallback(cmd_error* e) {
     CommandError cmdError(e); // Create wrapper object
 
-    myprintln("ERROR: ");
-    myprintln(cmdError.toString());
+    Serial.print("ERROR: ");
+    Serial.println(cmdError.toString());
 
     if (cmdError.hasCommand()) {
-        myprintln("Did you mean \"");
-        myprintln(cmdError.getCommand().toString());
-        myprintln("\"?");
+        Serial.print("Did you mean \"");
+        Serial.print(cmdError.getCommand().toString());
+        Serial.println("\"?");
     }
 }
 
@@ -87,7 +87,7 @@ void wifiCallback(cmd* c) {
             if(arg1.getValue() != "")
             {
                 if(!wifiMan.connect(arg1.getValue()))
-                    myprintln("This wifi doesnt exist");
+                    Serial.println("This wifi doesnt exist");
             }
             else wifiMan.autoConnect();
         }
@@ -99,8 +99,8 @@ void wifiCallback(cmd* c) {
     else if(rem.isSet())
     {
         if(wifiMan.removeNetwork(arg1.getValue())) 
-            myprintln("Removed");
-        else myprintln("This network isnt known");
+            Serial.println("Removed");
+        else Serial.println("This network isnt known");
     }
     else if(add.isSet())
     {
@@ -116,31 +116,25 @@ void wifiCallback(cmd* c) {
     else if(status.isSet())
     {
         if (WiFi.status() == WL_CONNECTED) {
-            myprintln("Connected to network: " + WiFi.SSID());
+            Serial.println("Connected to network: " + WiFi.SSID());
 
-            myprintln("IP Address: ");
-            myprintln(WiFi.localIP());
+            Serial.print("IP Address: ");
+            Serial.println(WiFi.localIP());
 
-            myprintln("Signal strength (RSSI): ");
-            myprintln(WiFi.RSSI());
+            Serial.print("Signal strength (RSSI): ");
+            Serial.println(WiFi.RSSI());
         } else {
-            myprintln("WiFi is not connected");
+            Serial.println("WiFi is not connected");
         }
     }
     else
     {
-        myprintln("Usage:");
-        myprintln(cmd.toString());
+        Serial.println("Usage:");
+        Serial.println(cmd.toString());
     }
 }
 
 void restartCallback(cmd* c)
 {
     ESP.restart();
-}
-
-
-void cliHandler::parseCliCommand(String& cmd)
-{
-    cli.parse(cmd);
 }
