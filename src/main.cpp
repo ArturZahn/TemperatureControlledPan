@@ -8,12 +8,10 @@
 // wifiManager wifi;
 void setup() {
     Serial.begin(115200);
-
     espcli.begin();
-
     wifiMan.begin(true);
-
     telegBot.begin();    
+    myprintObj.begin();
 
     // wifi.begin();
     // wifi.listSavedNetworks();
@@ -21,28 +19,19 @@ void setup() {
     // wifi.saveList();
     // wifi.connect();
 
+    
+    myprintln("Testing buffer");
+    myprintObj.testAll();
+
     setupOTA();
 }
 
-bool waitingForConnection = true;
 void loop() {
-    espcli.handle();
-    wifiMan.handle();
-    telegBot.handle();
+    // espcli.handle();
+    // wifiMan.handle();
+    // tempCtrl.handle();
+    // telegBot.handle();
 
-
-
-    tempCtrl.handle();
-    // tempCtrl.start(50);
-
-    if(waitingForConnection)
-    {
-        if(WiFi.status() == WL_CONNECTED)
-        {
-            waitingForConnection = false;
-            myprintObj.testAll();
-        }
-    }
 
 
     #if defined(ESP32_RTOS) && defined(ESP32)

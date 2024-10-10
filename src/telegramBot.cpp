@@ -7,12 +7,12 @@ client(),
 bot(telegramToken.c_str(), client),
 telegramLoop(telegramCheckNewMessagesPeriod)
 {
-    loadActiveChat();
 }
 
 void TelegramBot::begin() // Correct method names
 {
     this->client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
+    loadActiveChat();
 }
 
 void TelegramBot::loadActiveChat()
@@ -41,7 +41,8 @@ void TelegramBot::handle() // Correct method names
 
 void TelegramBot::sendText(String str)
 {
-    bot.sendMessage(activeChat, str, "");
+    if(activeChat != "")
+        bot.sendMessage(activeChat, str, "");
 }
 
 void TelegramBot::handleNewMessages(int numNewMessages) {
