@@ -6,12 +6,13 @@
 class circularBuffer
 {
 private:
-public:
     int bufferSize;
     char* printBuffer;
     char* bufferStart;
     char* bufferEnd;
     bool isBufferFull;
+    
+public:
     circularBuffer(int size);
     ~circularBuffer();
 

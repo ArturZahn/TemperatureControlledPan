@@ -9,7 +9,6 @@
 class myprintClass
 {
 private:
-    circularBuffer myCircularBuffer;
 public:
     myprintClass();
     void begin();

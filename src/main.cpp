@@ -13,10 +13,6 @@ void setup() {
     telegBot.begin();    
     myprintObj.begin();
 
-    
-    myprintln("Testing buffer");
-    myprintObj.testAll();
-
     setupOTA();
 }
 
