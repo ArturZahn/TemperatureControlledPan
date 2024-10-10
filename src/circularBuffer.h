@@ -7,11 +7,11 @@ class circularBuffer
 {
 private:
     int bufferSize;
-    char* printBuffer;
+    char* cBuffer;
     char* bufferStart;
     char* bufferEnd;
     bool isBufferFull;
-    
+
 public:
     circularBuffer(int size);
     ~circularBuffer();

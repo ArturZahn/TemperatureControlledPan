@@ -5,15 +5,15 @@
 circularBuffer::circularBuffer(int size)
 {
     bufferSize = size;
-    printBuffer = (char*) malloc(bufferSize*sizeof(char));
-    bufferStart = printBuffer;
-    bufferEnd = printBuffer;
+    cBuffer = (char*) malloc(bufferSize*sizeof(char));
+    bufferStart = cBuffer;
+    bufferEnd = cBuffer;
     isBufferFull = false;
 }
 
 circularBuffer::~circularBuffer()
 {
-    free(printBuffer);
+    free(cBuffer);
 }
 
 void circularBuffer::addToBuffer(String str)
@@ -21,15 +21,15 @@ void circularBuffer::addToBuffer(String str)
     if(str.length()==0) return;
 
     char* newBufferEnd;
-    if(bufferEnd+str.length() <= printBuffer+bufferSize) // fits before end of buffer
+    if(bufferEnd+str.length() <= cBuffer+bufferSize) // fits before end of buffer
     {
         strncpy(bufferEnd, str.c_str(), str.length());
 
         newBufferEnd = bufferEnd+str.length();
-        if(newBufferEnd == printBuffer+bufferSize)
+        if(newBufferEnd == cBuffer+bufferSize)
             newBufferEnd -= bufferSize;
 
-        if(isBufferFull || (bufferEnd<bufferStart && (newBufferEnd>bufferStart || newBufferEnd == printBuffer)))
+        if(isBufferFull || (bufferEnd<bufferStart && (newBufferEnd>bufferStart || newBufferEnd == cBuffer)))
         {
             bufferStart = newBufferEnd;
         }
@@ -39,15 +39,15 @@ void circularBuffer::addToBuffer(String str)
         // data will be splited, de beginning will be written to the end of the buffer, and the rest an the beginning of the buffer
 
         // write first part
-        int firstLength = printBuffer+bufferSize-bufferEnd;
+        int firstLength = cBuffer+bufferSize-bufferEnd;
         if(firstLength > 0) strncpy(bufferEnd, str.c_str(), firstLength);
 
         // write last part
         int lastPartLength = str.length()-firstLength;
-        strncpy(printBuffer, str.c_str()+firstLength, lastPartLength);
+        strncpy(cBuffer, str.c_str()+firstLength, lastPartLength);
 
         // update indexes
-        newBufferEnd = printBuffer+lastPartLength;
+        newBufferEnd = cBuffer+lastPartLength;
 
         if(isBufferFull || bufferStart>bufferEnd || newBufferEnd > bufferStart)
         {
@@ -57,9 +57,9 @@ void circularBuffer::addToBuffer(String str)
     else // str is larger or equal the buffer size
     {
         int newStrStart = str.length()-bufferSize;
-        strncpy(printBuffer, str.c_str()+newStrStart, bufferSize);
-        newBufferEnd = printBuffer;
-        bufferStart = printBuffer;
+        strncpy(cBuffer, str.c_str()+newStrStart, bufferSize);
+        newBufferEnd = cBuffer;
+        bufferStart = cBuffer;
     }
     
     bufferEnd = newBufferEnd;
@@ -79,13 +79,13 @@ String circularBuffer::getBufferAsString()
     String str;
     str.reserve(strSize);
 
-    int index = bufferStart - printBuffer;
+    int index = bufferStart - cBuffer;
     if (index < 0)
         index += bufferSize;
 
     for (int i = 0; i < strSize; i++)
     {
-        str += printBuffer[index];
+        str += cBuffer[index];
         index = (index + 1) % bufferSize;
     }
 
