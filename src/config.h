@@ -19,7 +19,7 @@
 /*------------------------ INTERFACES ------------------------*/
 
 #define BAUDRATE 115200
-#define printBufferSize 50
+#define printBufferSize 20
 
 #define nameHost "iogurte"
 

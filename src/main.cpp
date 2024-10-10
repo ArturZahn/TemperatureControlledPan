@@ -13,12 +13,6 @@ void setup() {
     telegBot.begin();    
     myprintObj.begin();
 
-    // wifi.begin();
-    // wifi.listSavedNetworks();
-    // wifi.enableAutoConnection();
-    // wifi.saveList();
-    // wifi.connect();
-
     
     myprintln("Testing buffer");
     myprintObj.testAll();
@@ -27,12 +21,10 @@ void setup() {
 }
 
 void loop() {
-    // espcli.handle();
-    // wifiMan.handle();
-    // tempCtrl.handle();
-    // telegBot.handle();
-
-
+    espcli.handle();
+    wifiMan.handle();
+    tempCtrl.handle();
+    telegBot.handle();
 
     #if defined(ESP32_RTOS) && defined(ESP32)
     #else // If you do not use FreeRTOS, you have to regulary call the handle method.

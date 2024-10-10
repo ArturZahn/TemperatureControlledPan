@@ -4,15 +4,12 @@
 #include <Arduino.h>
 
 #include "config.h"
-
+#include "circularBuffer.h"
 
 class myprintClass
 {
 private:
-    char* printBuffer;
-    char* bufferStart;
-    char* bufferEnd;
-    bool isBufferFull;
+    circularBuffer myCircularBuffer;
 public:
     myprintClass();
     void begin();
