@@ -2,7 +2,7 @@
 
 // #include "wifiManager.h"
 #include "globalInstances.h"
-
+#include "ota.h"
 // wifiManager wifi;
 void setup() {
     Serial.begin(115200);
@@ -16,9 +16,16 @@ void setup() {
     // wifi.enableAutoConnection();
     // wifi.saveList();
     // wifi.connect();
+    
+    setupOTA();
 }
 
 void loop() {
     espcli.handle();
     wifiMan.handle();
+
+    #if defined(ESP32_RTOS) && defined(ESP32)
+    #else // If you do not use FreeRTOS, you have to regulary call the handle method.
+        ArduinoOTA.handle();
+    #endif
 }
