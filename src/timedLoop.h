@@ -2,6 +2,7 @@
 #define TIMEDLOOP
 
 #include <Arduino.h>
+#include "print.h"
 
 class timedLoop
 {

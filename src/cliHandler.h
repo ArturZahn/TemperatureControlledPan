@@ -1,6 +1,7 @@
 #ifndef CLIHANDLER_H
 #define CLIHANDLER_H
 
+#include "print.h"
 #include <Arduino.h>
 #include <SimpleCLI.h>
 #include <Preferences.h>
@@ -19,6 +20,7 @@ public:
     cliHandler(HardwareSerial& serial, int baudrate);
     void begin();
     void handle();
+    void parseCliCommand(String& cmd);
 };
 
 
