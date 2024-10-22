@@ -1,6 +1,7 @@
 #include "cliHandler.h"
 
 #include "globalInstances.h"
+#include "simpleProgramControl.h"
 
 // Preferences prefs;
 cliHandler::cliHandler(HardwareSerial& serial, int baudrate)
@@ -30,6 +31,15 @@ void cliHandler::begin()
     wifiCmd.addFlagArgument("status");
     wifiCmd.addPositionalArgument("arg1", "");
     wifiCmd.addPositionalArgument("arg2", "");
+
+    Command temperatureControlCmd;
+    temperatureControlCmd = cli.addCommand("prog", temperatureControlCallback);
+    temperatureControlCmd.addFlagArgument("temp");
+    temperatureControlCmd.addFlagArgument("time");
+    temperatureControlCmd.addFlagArgument("start");
+    temperatureControlCmd.addFlagArgument("reset");
+    temperatureControlCmd.addPositionalArgument("arg1", "");
+
 
     Command restartCmd;
     restartCmd = cli.addCommand("restart", restartCallback);
@@ -65,10 +75,8 @@ void errorCallback(cmd_error* e) {
 
 void wifiCallback(cmd* c) {
     Command cmd(c);
-
     Argument arg1 = cmd.getArgument("arg1");
     Argument arg2 = cmd.getArgument("arg2");
-
     Argument con = cmd.getArgument("con");
     Argument dis = cmd.getArgument("dis");
     Argument add = cmd.getArgument("add");
@@ -143,4 +151,36 @@ void restartCallback(cmd* c)
 void cliHandler::parseCliCommand(String& cmd)
 {
     cli.parse(cmd);
+}
+
+
+void temperatureControlCallback(cmd* c) {
+    Command cmd(c);
+
+    Argument arg1 = cmd.getArgument("arg1");
+    Argument temp = cmd.getArgument("temp");
+    Argument time = cmd.getArgument("time");
+    Argument start = cmd.getArgument("start");
+    Argument reset = cmd.getArgument("reset");
+
+    if(temp.isSet())
+    {   
+        simpleProgramCtrl.setTemperature(arg1.getValue().toFloat());
+        myprintln("Temperature seted");
+    }
+    else if(time.isSet())
+    {
+        simpleProgramCtrl.setTime(arg1.getValue().toInt());
+        myprintln("Time seted");
+    }
+    else if(start.isSet())
+    {
+        simpleProgramCtrl.start();
+        myprintln("starting program");
+    }
+    else if(reset.isSet())
+    {
+        simpleProgramCtrl.reset();
+        myprintln("stoping program");
+    }
 }

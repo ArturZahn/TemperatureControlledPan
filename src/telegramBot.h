@@ -14,7 +14,8 @@ private:
     Preferences p;
     WiFiClientSecure client;
     UniversalTelegramBot bot;
-    timedLoop telegramLoop;
+    timedLoop newMessagesLoop;
+    timedLoop serialTelegramLoop;
 
     String activeChat;
 
@@ -25,7 +26,7 @@ public:
     TelegramBot(String telegramToken);
     void begin();
     void handle();
-    void sendText(String str);
+    void telegramSerialSendBuffer();
 };
 
 

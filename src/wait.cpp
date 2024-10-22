@@ -15,3 +15,7 @@ void wait::handle(){
         this->setAsStoped();
     }
 }
+void wait::setTime(unsigned long time)
+{
+    this->delay = time;
+}

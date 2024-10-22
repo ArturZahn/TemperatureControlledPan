@@ -16,6 +16,15 @@ circularBuffer::~circularBuffer()
     free(cBuffer);
 }
 
+int circularBuffer::getLength()
+{
+    int bufferLength = isBufferFull ? bufferSize : bufferEnd - bufferStart;
+    if (bufferLength < 0)
+        bufferLength += bufferSize;
+    
+    return bufferLength;
+}
+
 void circularBuffer::addToBuffer(String str)
 {
     if(str.length()==0) return;
@@ -69,9 +78,7 @@ void circularBuffer::addToBuffer(String str)
 
 String circularBuffer::getBufferAsString()
 {
-    int strSize = isBufferFull ? bufferSize : bufferEnd - bufferStart;
-    if (strSize < 0)
-        strSize += bufferSize;
+    int strSize = getLength();
 
     if (strSize == 0)
         return "";
@@ -90,4 +97,18 @@ String circularBuffer::getBufferAsString()
     }
 
     return str;
+}
+
+String circularBuffer::readBuffer()
+{
+    String str = getBufferAsString();
+    clearBuffer();
+    return str;
+}
+
+void circularBuffer::clearBuffer()
+{
+    bufferStart = cBuffer;
+    bufferEnd = cBuffer;
+    isBufferFull = false;
 }

@@ -10,12 +10,9 @@ class myprintClass
 {
 private:
 public:
+    circularBuffer printBuffer;
     myprintClass();
-    void begin();
-    void testAll();
-    void test(int start, int currentLength, int addLength);
     void addToBuffer(String str);
-    String getBufferAsString();
 };
 
 extern myprintClass myprintObj;
@@ -23,7 +20,7 @@ extern myprintClass myprintObj;
 template<typename T>
 void myprint(T t) {
     Serial.print(t);
-    // myprintObj.addToBuffer(String(t));
+    myprintObj.printBuffer.addToBuffer(String(t));
 }
 
 template<typename T, typename... Args>

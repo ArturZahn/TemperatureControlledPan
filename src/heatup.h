@@ -12,6 +12,7 @@ public:
     void handleStart() override;
     void handleForceStop() override;
     void handle() override;
+    void setTargetTemperature(float temperature);
 };
 
 #endif

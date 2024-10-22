@@ -18,6 +18,9 @@ public:
 
     void addToBuffer(String str);
     String getBufferAsString();
+    String readBuffer();
+    void clearBuffer();
+    int getLength();
 };
 
 

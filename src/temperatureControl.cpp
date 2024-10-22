@@ -32,6 +32,7 @@ temperatureControl::temperatureControl(uint tempPin, uint _relayPin, bool _inver
 // starts and stops the temperature control
 void temperatureControl::start()
 {
+    myprintln("start temp control");
     this->controlState = true;
 }
 void temperatureControl::start(float temp)
@@ -110,20 +111,23 @@ void temperatureControl::handle()
 
     if(loop.check())
     {
+        // myprintln("control state ", controlState);
         if(this->controlState)
         {
             float currentTemperature = this->getCurrentTemperature();
+            // myprintln("cur temp: ", currentTemperature);
             if (currentTemperature > 0)
             {
+                // myprintln("heating: ", isHeating);
                 if(this->isHeating && currentTemperature >= this->targetTemperature)
-            {
-                this->stopHeating();
-                this->reachedTargetTemp = true;
-            }
+                {
+                    this->stopHeating();
+                    this->reachedTargetTemp = true;
+                }
 
                 if(!this->isHeating && (currentTemperature <= (this->targetTemperature - this->maxTemperatureDifference)))
-            {
-                this->startHeating();
+                {
+                    this->startHeating();
                 }
             }
             else

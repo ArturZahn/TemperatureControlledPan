@@ -13,6 +13,7 @@ public:
     void handleStart() override;
     void handleForceStop() override;
     void handle() override;
+    void setTime(unsigned long time);
 };
 
 #endif

@@ -19,12 +19,13 @@
 /*------------------------ INTERFACES ------------------------*/
 
 #define BAUDRATE 115200
-#define printBufferSize 20
+#define printBufferSize 2048
 
 #define nameHost "iogurte"
 
 #define telegramBotToken priv_telegramBotToken
 #define telegramCheckNewMessagesPeriod 1000
+#define flushTelegramSerialPeriod 5000
 
 
 /*------------------------ HARDWARE PINOUT ------------------------*/

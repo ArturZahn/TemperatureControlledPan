@@ -3,10 +3,7 @@
 
 myprintClass myprintObj;
 
-myprintClass::myprintClass()
-{
-}
-
-void myprintClass::begin()
+myprintClass::myprintClass() :
+printBuffer(printBufferSize)
 {
 }

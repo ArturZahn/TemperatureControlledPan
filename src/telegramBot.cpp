@@ -5,7 +5,8 @@
 TelegramBot::TelegramBot(String telegramToken) :  // Correct constructor name
 client(),
 bot(telegramToken.c_str(), client),
-telegramLoop(telegramCheckNewMessagesPeriod)
+newMessagesLoop(telegramCheckNewMessagesPeriod),
+serialTelegramLoop(flushTelegramSerialPeriod)
 {
 }
 
@@ -29,7 +30,7 @@ void TelegramBot::setActiveChat(String _activeChat)
 
 void TelegramBot::handle() // Correct method names
 {
-    if(telegramLoop.check())
+    if(newMessagesLoop.check())
     {
         int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
 
@@ -37,12 +38,19 @@ void TelegramBot::handle() // Correct method names
             handleNewMessages(numNewMessages);
         }
     }
+
+    if(serialTelegramLoop.check())
+    {
+        telegBot.telegramSerialSendBuffer();
+    }
 }
 
-void TelegramBot::sendText(String str)
+void TelegramBot::telegramSerialSendBuffer()
 {
-    if(activeChat != "")
-        bot.sendMessage(activeChat, str, "");
+    if(activeChat != "" && WiFi.status() == WL_CONNECTED && myprintObj.printBuffer.getLength() > 0)
+    {
+        bot.sendMessage(activeChat, myprintObj.printBuffer.readBuffer(), "");
+    }
 }
 
 void TelegramBot::handleNewMessages(int numNewMessages) {
