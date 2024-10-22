@@ -28,6 +28,7 @@ void cliHandler::begin()
     wifiCmd.addFlagArgument("add");
     wifiCmd.addFlagArgument("rem");
     wifiCmd.addFlagArgument("list");
+    wifiCmd.addFlagArgument("list2");
     wifiCmd.addFlagArgument("status");
     wifiCmd.addPositionalArgument("arg1", "");
     wifiCmd.addPositionalArgument("arg2", "");
@@ -82,6 +83,7 @@ void wifiCallback(cmd* c) {
     Argument add = cmd.getArgument("add");
     Argument rem = cmd.getArgument("rem");
     Argument list = cmd.getArgument("list");
+    Argument list2 = cmd.getArgument("list2");
     Argument status = cmd.getArgument("status");
 
     if(con.isSet())
@@ -120,6 +122,10 @@ void wifiCallback(cmd* c) {
     else if(list.isSet())
     {
         wifiMan.listSavedNetworks();
+    }
+    else if(list2.isSet())
+    {
+        wifiMan.listAvailableNetworks();
     }
     else if(status.isSet())
     {

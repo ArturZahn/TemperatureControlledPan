@@ -117,7 +117,7 @@ void wifiManager::startMDNS()
 
 void wifiManager::_chooseNetworkFromScanAndConnect()
 {
-    // myprintln("choosing network to connect");
+    myprintln("choosing network to connect");
     int n = WiFi.scanComplete();
 
     if(n == -2)
@@ -134,14 +134,14 @@ void wifiManager::_chooseNetworkFromScanAndConnect()
 
         if(it != this->wifiList.end())
         {
-            // myprint(">");
+            myprint(">");
             if(bestWifiId == -1 || WiFi.RSSI(i) > WiFi.RSSI(bestWifiId))
             {
                 bestWifiId = i;
                 bestWifiIndexInList = std::distance(wifiList.begin(), it);
             }
         }
-        // myprintln(WiFi.SSID(i));
+        myprintln(WiFi.SSID(i));
     }
 
     if(bestWifiIndexInList != -1)
@@ -303,4 +303,37 @@ bool wifiManager::connect(int networkIndex)
 void wifiManager::disconnect()
 {
     WiFi.disconnect();
+}
+
+void wifiManager::listAvailableNetworks()
+{
+    myprint("Scanning for available networks...");
+    
+    // Start the scan
+    int n = WiFi.scanNetworks();
+    
+    if (n == 0)
+    {
+        myprint("No networks found.");
+    }
+    else
+    {
+        myprint("Networks found:");
+        
+        for (int i = 0; i < n; ++i)
+        {
+            // Print SSID, signal strength (RSSI), and encryption type
+            myprint(i + 1);
+            myprint(": ");
+            myprint(WiFi.SSID(i));
+            myprint(" (");
+            myprint(WiFi.RSSI(i));
+            myprint(" dBm)");
+            myprint(" Encryption: ");
+            myprint(WiFi.encryptionType(i) == WIFI_AUTH_OPEN ? "Open" : "Encrypted");
+            
+            delay(10);
+        }
+    }
+
 }

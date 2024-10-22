@@ -51,6 +51,7 @@ public:
     void saveList();
 
     void startMDNS();
+    void listAvailableNetworks();
 
     void listSavedNetworks();
     int getNumberOfSavedNetworks();

@@ -16,6 +16,8 @@
 void ota_handle( void * parameter );
 #endif
 
+#include "print.h"
+
 void setupOTA();
 
 #endif
